@@ -1,0 +1,4 @@
+FROM search_service:base
+
+COPY ./search_service /app/search_service
+CMD ["python", "-m", "search_service.main"]

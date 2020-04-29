@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+
+  postgres:
+    image: postgres:11
+    container_name: postgres_tests
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+    logging:
+      driver: none
+    ports:
+      - "5432:5432"
+
+  test_search_service:
+    image: alexvolha/search_service:base
+    command: pytest -vv tests/ --disable-warnings
+    volumes:
+      - ../search_service:/app/search_service:ro
+      - ../tests:/app/tests:ro
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres_tests
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
